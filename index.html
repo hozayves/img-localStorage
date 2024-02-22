@@ -4,22 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .container {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        button {
+            width: 200px;
+            padding: 0.6rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .preview {
+            width: 400px;
+            height: 400px;
+        }
+        img {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <input type="file" id="myFileInput">
-    <img src="" alt="Preview" id="imgPreview">
+    <div class="container">
+        <input type="file" id="myFileInput">
+        <button id="saveImgFile">Save</button>
+    </div>
+    <div class="preview">
+        <img src="" alt="Preview" id="imgPreview">
+    </div>
     <script>
         const imgFile = document.querySelector("#myFileInput");
         const previewImg = document.querySelector("#imgPreview")
-        imgFile.addEventListener('change', (e) => {
+        const button = document.querySelector("#saveImgFile")
+        let image;
+        imgFile.addEventListener('change', e => {
             const reader = new FileReader();
-
             reader.addEventListener('load', () => {
-                localStorage.setItem("recent-image", reader.result)
+                image = reader.result
             })
-
             reader.readAsDataURL(e.target.files[0])
-        });
+        })
+        button.addEventListener('click', () => {
+            const localImg = localStorage.getItem('recent-image');
+            const imgSrcValue = previewImg.getAttribute("src");
+            if (imgSrcValue === localImg && image) {
+                localStorage.setItem("recent-image", image)
+                previewImg.setAttribute("src", image)
+            }
+        })
         document.addEventListener("DOMContentLoaded", () => {
             const recentImageDataUrl = localStorage.getItem("recent-image");
             if (recentImageDataUrl) {
