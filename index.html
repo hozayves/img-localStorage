@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="myFileInput">
+    <img src="" alt="Preview" id="imgPreview">
+    <script>
+        const imgFile = document.querySelector("#myFileInput");
+        const previewImg = document.querySelector("#imgPreview")
+        imgFile.addEventListener('change', (e) => {
+            const reader = new FileReader();
+
+            reader.addEventListener('load', () => {
+                localStorage.setItem("recent-image", reader.result)
+            })
+
+            reader.readAsDataURL(e.target.files[0])
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const recentImageDataUrl = localStorage.getItem("recent-image");
+            if (recentImageDataUrl) {
+                previewImg.setAttribute("src", recentImageDataUrl)
+            }
+        })
+    </script>
+</body>
+</html>
